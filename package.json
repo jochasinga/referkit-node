@@ -22,7 +22,10 @@
     "type": "git",
     "url": "git+https://github.com/jochasinga/alphaseek.js.git"
   },
-  "keywords": ["Alphaseek", "referral"],
+  "keywords": [
+    "Alphaseek",
+    "referral"
+  ],
   "author": "Joe Chasinga <joe@alphaseek.io>",
   "license": "ISC",
   "bugs": {
@@ -37,5 +40,8 @@
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "axios": "^0.19.0"
   }
 }
