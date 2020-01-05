@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {loginUrl, logoutUrl} from './endpoints';
-import {Auth} from './Auth';
+import {Auth} from './auth';
 
 async function login(emailAddress: string, password: string): Promise<string> {
   try {
