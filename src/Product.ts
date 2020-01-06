@@ -7,6 +7,11 @@ interface AuthConfig {
   token?: string;
 }
 
+type UpdateProps = {
+  alias?: string;
+  domain?: string;
+}
+
 interface ProductInterface {
   uid: string;
   alias: string;
@@ -74,6 +79,55 @@ export class Product implements ProductInterface {
       return this;
     } catch (err) {
       return err;
+    }
+  }
+
+  async update(props: UpdateProps): Promise<Product> {
+    let duplicateAlias = false;
+    let duplicateDomain = false;
+    try {
+      let p = await this.get();
+      if (props.alias !== undefined) {
+        duplicateAlias = (p.alias === props.alias);
+      }
+      if (props.domain !== undefined) {
+        duplicateDomain = (p.domain === props.domain);
+      }
+      if (duplicateAlias && duplicateDomain) {
+        return this;
+      }
+    } catch (err) {
+      return err;
+    }
+
+    try {
+      const url: string = productUrl + '/' + this.alias;
+      const res = await axios.post(url, {
+        alias: props.alias,
+        domain: props.domain,
+        headers: {
+          'Authorization': `Bearer ${Product._token}`,
+        }
+      });
+      const {product} = res.data;
+      return <Product>product;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async delete(): Promise<boolean> {
+    try {
+      const url: string = productUrl + '/' + this.alias;
+      const res = await axios.delete(url, {
+        headers: {
+          'Authorization': `Bearer ${Product._token}`,
+        }
+      });
+      const {success} = res.data;
+      return success;
+    } catch (err) {
+      return false;
     }
   }
 }

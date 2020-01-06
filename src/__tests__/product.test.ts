@@ -32,4 +32,21 @@ describe('Product class', () => {
     let p = await prod.get(alias);
     expect(p).toEqual(product);
   });
+
+  it('should update a product', async () => {
+    const res = {data: {product}};
+    const mockedAxios = axios as jest.Mocked<typeof axios>;
+    mockedAxios.post.mockResolvedValue(res);
+    const newAlias = 'babadook-9999';
+    let p = await prod.update({alias: newAlias});
+    expect(p).toEqual(Object.assign(product, {alias: newAlias}));
+  });
+
+  it('should delete a product', async () => {
+    const res = {data: {success: true}};
+    const mockedAxios = axios as jest.Mocked<typeof axios>;
+    mockedAxios.delete.mockResolvedValue(res);
+    const ok = await prod.delete();
+    expect(ok).toBeTruthy();
+  });
 });
