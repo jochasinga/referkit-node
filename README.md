@@ -27,3 +27,14 @@ let ok = await Auth.logout();
 ```
 
 This also clears old token from the localStorage if `Auth.useLocalStorage` is set to `true`.
+
+If you aren't using localStorage, create a singleton instance of the `Auth` object so you could pass it around in other calls.
+
+```js
+
+let auth = new Auth().login('joe@awesome.app', 'secretPassword');
+
+// Create a new product.
+let prod = new Product({domain: 'awesome.io', auth});
+
+```

@@ -17,7 +17,7 @@ describe('Top-level module functions', () => {
     const res = {success: true};
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     mockedAxios.post.mockResolvedValue(res);
-    const ok = await logout(token);
+    const ok = await logout();
     expect(ok).toBeTruthy();
   });
 });
