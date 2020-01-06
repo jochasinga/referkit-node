@@ -3,10 +3,9 @@ import {loginUrl, logoutUrl} from './endpoints';
 
 export class Auth {
   static get token() {
-    if (window && window.localStorage) {
-      return window.localStorage.getItem(Auth.key);
-    }
-    // return Auth._token;
+    return (window && window.localStorage)
+      ? window.localStorage.getItem(Auth.key)
+      : Auth._token;
   }
 
   public static hasCurrent(): boolean {
@@ -17,22 +16,9 @@ export class Auth {
     return Auth._current;
   }
 
-  // public static set useLocalStorage(using: boolean) {
-  //   if (window != undefined && window.localStorage != undefined) {
-  //     Auth._useLocalStorage = using;
-  //   }
-  // }
-
-  // public static get useLocalStorage(): boolean {
-  //   return Auth._useLocalStorage;
-  // }
-
   public static clearLocalStorage() {
     if (window != undefined && window.localStorage != undefined) {
       window.localStorage.removeItem(Auth.key);
-      // if (Auth._useLocalStorage) {
-      //   Auth._useLocalStorage = false;
-      // }
     }
   }
 
@@ -104,30 +90,20 @@ export class Auth {
   }
 
   private static key = 'alphaseekToken';
-  // private static _token: string;
-  // private static _useLocalStorage: boolean = false;
   private static clearToken() {
-    // if (Auth.useLocalStorage) {
-    //   window.localStorage.removeItem(Auth.key);
-    // } else {
-    //   Auth._token = '';
-    // }
     if (window && window.localStorage) {
       window.localStorage.removeItem(Auth.key);
     }
+    Auth._token = '';
   }
   private static setToken(tok: string) {
-    // const token = tok.trim();
-    // if (Auth.useLocalStorage) {
-    //   window.localStorage.setItem(Auth.key, token);
-    // } else {
-    //   Auth._token = token;
-    // }
     if (window && window.localStorage) {
       window.localStorage.setItem(Auth.key, tok.trim());
     }
+    Auth._token = tok;
   }
 
+  private static _token: string;
   private static _current: Auth;
   private _token: string = '';
 }

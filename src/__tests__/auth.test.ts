@@ -26,15 +26,6 @@ describe('Auth class', () => {
       expect(Auth.token).toBe(token);
     });
 
-    // it('should not have set useLocalStorage to true', () => {
-    //   expect(Auth.useLocalStorage).toBeFalsy();
-    // });
-
-    // it('should set useLocalStorage to true', () => {
-    //   Auth.useLocalStorage = true;
-    //   expect(Auth.useLocalStorage).toBeTruthy();
-    // });
-
     it('mocks and calls window.localStorage.setItem', async () => {
       const res = {data: {token}};
       const mockedAxios = axios as jest.Mocked<typeof axios>;
