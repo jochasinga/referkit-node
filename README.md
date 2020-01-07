@@ -44,7 +44,7 @@ async function init() {
 
 ## Authentication
 
-To log into your account, use `Auth` static class.
+To log into your account, use `Auth` class.
 
 ```js
 
@@ -54,9 +54,9 @@ let token = await Auth.login('joe@awesome.app', 'secretPassword');
 
 ```
 
-The token will also be stored in-memory as a static variable in the `Auth` class.
+The token will be stored in the browser's `localStorage` if it's available and also in-memory as a static variable.
 
-If you'd like to use the browser's localStorage to store the access token, set `Auth.useLocalStorage = true` before logging in.
+You can opt-out of storing the token in the browser's localStorage by setting `Auth.useLocalStorage = false` before calling `login()`.
 
 To log out (invalidate the access token):
 
@@ -68,13 +68,14 @@ let ok = await Auth.logout();
 
 This also clears old token from the localStorage if `Auth.useLocalStorage` is set to `true`.
 
-If you aren't using localStorage, create a singleton instance of the `Auth` object so you could pass it around in other calls.
+You can also create an `Auth` singleton instance so you could pass it around in other calls.
 
 ```js
 
-let auth = new Auth().login('joe@awesome.app', 'secretPassword');
+let auth = new Auth();
+let tok = await auth.login('joe@awesome.app', 'secretPassword');
 
 // Create a new product.
-let prod = new Product({domain: 'awesome.io', auth});
+let prod = new Product('awesome.app', {auth});
 
 ```
