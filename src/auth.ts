@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {loginUrl, logoutUrl} from './endpoints';
+import {loginUrl, logoutUrl, meUrl} from './endpoints';
+import {Customer} from './customer';
 
 export class Auth {
   static get token() {
@@ -48,6 +49,20 @@ export class Auth {
     }
   }
 
+  public static async me(): Promise<Customer> {
+    try {
+      const res = await axios.get(meUrl, {
+        headers: {
+          'Authorization': `Bearer ${Auth.token}`,
+        }
+      });
+      const {me} = res.data;
+      return me as Customer;
+    } catch (err) {
+      return err;
+    }
+  }
+
   constructor() {
     if (Auth.hasCurrent()) {
       Auth._current.logout();
@@ -84,6 +99,20 @@ export class Auth {
       const {success} = res.data;
       this._token = '';
       return success;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async me(): Promise<Customer> {
+    try {
+      const res = await axios.get(meUrl, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`,
+        }
+      });
+      const {me} = res.data;
+      return me as Customer;
     } catch (err) {
       return err;
     }
