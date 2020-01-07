@@ -1,6 +1,46 @@
 # Alphaseek.js
 
-JavaScript/TypeScript library for building referral with [Alphaseek SDK](http://alphaseek.io).
+JavaScript/TypeScript library for building a referral campaign with [Alphaseek SDK](http://alphaseek.io).
+
+## Install
+
+```shell
+
+npm install alphaseek
+
+```
+
+## Getting started
+
+In your project, authenticate (login) in the appropriate module to retain the access token, which will be useful later.
+
+```javascript
+
+import {Auth} from 'alphaseek';
+
+async function init() {
+  let auth = new Auth();
+  await auth.login('joe@alphaseek.io', 'secretpass1234');
+
+  // Now we can use auth instead of raw token, which
+  // atomically keeps track of the signed-in state.
+  let product = new Product('alphaseek.io', {auth});
+
+  // Save product
+  product = await prod.create();
+
+  let user = await new User('user1@gmail.com', {product, from: '916hqpB7'}).create();
+
+  // Get user's unique referral link and code
+  const {url, moniker, score, referrer} = user.referral;
+
+  console.log(url); // https://alphaseek.me/i/99PpQrh7
+  console.log(moniker); // 99PpQrh7
+  console.log(score); // 1
+  console.log(referrer.referral.moniker); // 916hqpB7
+}
+
+```
 
 ## Authentication
 
