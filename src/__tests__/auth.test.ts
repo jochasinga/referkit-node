@@ -70,10 +70,14 @@ describe('Auth class', () => {
     beforeEach(() => {
       auth = new Auth();
     });
+    afterEach(async () => {
+      Auth.clearCurrent();
+    });
 
     it('should has a loggedout singleton', () => {
-      expect(Auth.hasCurrent()).toBeTruthy();
-      expect(Auth.current.isLoggedIn).toBeFalsy();
+      // expect(Auth.hasCurrent()).toBeTruthy();
+      expect(Auth.hasCurrent()).toBeFalsy();
+      expect(Auth.current).toBeNull();
     });
 
     it('should log in correctly', async () => {
@@ -84,20 +88,39 @@ describe('Auth class', () => {
       expect(tok).toBe(token);
       expect(auth.token).toBe(token);
       expect(auth.isLoggedIn).toBeTruthy();
-      expect(Auth.current.isLoggedIn).toBeTruthy();
+      expect(Auth.current?.isLoggedIn).toBeTruthy();
       expect(Auth.current).toBe(auth);
     });
 
-    it('should replace old singletons with new ones', () => {
-      expect(Auth.current).toBe(auth);
+    it('should replace old singletons with new ones', async () => {
+      expect(Auth.current).toBeNull();
 
       const auth1 = new Auth();
       expect(Auth.current).not.toBe(auth);
-      expect(Auth.current).toBe(auth1);
+      expect(Auth.current).not.toBe(auth1);
+      expect(auth.isLoggedIn).toBeFalsy();
+      expect(auth1.isLoggedIn).toBeFalsy();
 
       const auth2 = new Auth();
-      expect(Auth.current).not.toBe(auth1);
-      expect(Auth.current).toBe(auth2);
+      expect(Auth.current).not.toBe(auth2);
+      expect(auth2.isLoggedIn).toBeFalsy();
+
+      const res = {data: {token}};
+      const mockedAxios = axios as jest.Mocked<typeof axios>;
+      mockedAxios.post.mockResolvedValue(res);
+
+      await auth1.login('foo@gmail.com', 'password1');
+      expect(auth1.isLoggedIn).toBeTruthy();
+
+      await auth2.login('bar@gmail.com', 'password2');
+      expect(auth2.isLoggedIn).toBeTruthy();
+      expect(auth1.isLoggedIn).toBeFalsy();
+
+      const auth3 = new Auth();
+      await auth3.login('baz@gmail.com', 'password3');
+      expect(auth1.isLoggedIn).toBeFalsy();
+      expect(auth2.isLoggedIn).toBeFalsy();
+      expect(auth3.isLoggedIn).toBeTruthy();
     });
 
     it('should return customer\'s info', async () => {

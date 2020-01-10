@@ -10,10 +10,10 @@ export class Auth {
   }
 
   public static hasCurrent(): boolean {
-    return Auth._current !== undefined;
+    return Boolean(Auth._current);
   }
 
-  static get current(): Auth {
+  static get current(): Auth|null {
     return Auth._current;
   }
 
@@ -21,6 +21,13 @@ export class Auth {
     if (window != undefined && window.localStorage != undefined) {
       window.localStorage.removeItem(Auth.key);
     }
+  }
+
+  public static clearCurrent() {
+    if (Auth._current) {
+      Auth._current._token = '';
+    }
+    Auth._current = null;
   }
 
   public static async login(emailAddress: string, password: string): Promise<string> {
@@ -63,11 +70,18 @@ export class Auth {
     }
   }
 
-  constructor() {
+  // constructor() {
+  //   if (Auth.hasCurrent()) {
+  //     Auth._current.logout();
+  //   }
+  //   Auth._current = this;
+  // }
+
+  private static replaceCurrent(current: Auth) {
     if (Auth.hasCurrent()) {
-      Auth._current.logout();
+      Auth._current?.logout();
     }
-    Auth._current = this;
+    Auth._current = current;
   }
 
   public get isLoggedIn(): boolean {
@@ -79,6 +93,12 @@ export class Auth {
   }
 
   public async login(emailAddress: string, password: string): Promise<string> {
+    Auth.replaceCurrent(this);
+    // if (Auth._current !== this) {
+    //   console.warn("This Auth instance isn't active");
+    //   await this.logout();
+    // }
+
     try {
       const res = await axios.post(loginUrl, {emailAddress, password})
       const {token} = res.data;
@@ -133,6 +153,6 @@ export class Auth {
   }
 
   private static _token: string;
-  private static _current: Auth;
+  private static _current: Auth|null = null;
   private _token: string = '';
 }
