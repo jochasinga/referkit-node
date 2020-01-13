@@ -25,23 +25,26 @@ export class Product implements ProductInterface {
   domain: string = '';
   created: Date = new Date();
 
-  private static _token: string = '';
+  private auth: Auth|undefined;
+  private token: string;
 
   constructor(domain: string, config: AuthConfig) {
+    const {auth, token} = config;
+    this.auth = auth;
+    this.token = token || '';
     this.domain = domain;
-    let {auth, token} = config;
-    if (auth !== undefined) {
-      Product._token = auth.token;
-    } else if (token !== undefined) {
-      Product._token = token;
-    }
   }
 
   async create(): Promise<Product> {
+    if (!(this.auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
     try {
       const res = await axios.post(productUrl, {
         headers: {
-          'Authorization': `Bearer ${Product._token}`,
+          'Authorization': `Bearer ${this.auth?.token}`,
         }
       });
       const {product} = res.data;
@@ -57,6 +60,11 @@ export class Product implements ProductInterface {
   }
 
   async get(alias: string = ''): Promise<Product> {
+    if (!(this.auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
     let productAlias = '';
     if (alias === '') {
       productAlias = this.alias;
@@ -67,7 +75,7 @@ export class Product implements ProductInterface {
       const url: string = productUrl + '/' + productAlias;
       const res = await axios.get(url, {
         headers: {
-          'Authorization': `Bearer ${Product._token}`,
+          'Authorization': `Bearer ${this.auth?.token}`,
         }
       });
       const {product} = res.data;
@@ -83,6 +91,11 @@ export class Product implements ProductInterface {
   }
 
   async update(props: UpdateProps): Promise<Product> {
+    if (!(this.auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
     let duplicateAlias = false;
     let duplicateDomain = false;
     try {
@@ -106,7 +119,7 @@ export class Product implements ProductInterface {
         alias: props.alias,
         domain: props.domain,
         headers: {
-          'Authorization': `Bearer ${Product._token}`,
+          'Authorization': `Bearer ${this.auth?.token}`,
         }
       });
       const {product} = res.data;
@@ -117,11 +130,16 @@ export class Product implements ProductInterface {
   }
 
   async delete(): Promise<boolean> {
+    if (!(this.auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
     try {
       const url: string = productUrl + '/' + this.alias;
       const res = await axios.delete(url, {
         headers: {
-          'Authorization': `Bearer ${Product._token}`,
+          'Authorization': `Bearer ${this.auth?.token}`,
         }
       });
       const {success} = res.data;
