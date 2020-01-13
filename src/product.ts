@@ -4,7 +4,6 @@ import {productUrl} from './endpoints';
 
 interface AuthConfig {
   auth?: Auth;
-  token?: string;
 }
 
 type UpdateProps = {
@@ -26,12 +25,10 @@ export class Product implements ProductInterface {
   created: Date = new Date();
 
   private auth: Auth|undefined;
-  private token: string;
 
   constructor(domain: string, config: AuthConfig) {
-    const {auth, token} = config;
+    const {auth} = config;
     this.auth = auth;
-    this.token = token || '';
     this.domain = domain;
   }
 
