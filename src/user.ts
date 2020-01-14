@@ -90,4 +90,41 @@ export class User implements UserInterface {
       return err;
     }
   }
+
+  async get(email: string = ''): Promise<User> {
+    const {auth} = this.product;
+    if (!(auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
+    email = email === '' ? this.emailAddress : email;
+
+    try {
+      const url: string = userUrl + '/' + email;
+      const res = await axios.get(url, {
+        headers: {
+          'Authorization': `Bearer ${auth?.token}`,
+        }
+      });
+      const {user} = res.data;
+      const {
+        uid, firstName, lastName,
+        emailAddress, phoneNumber,
+        created, referral,
+      } = user;
+
+      this.uid = uid;
+      this.emailAddress = emailAddress;
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.phoneNumber = phoneNumber;
+      this.referral = referral;
+      this.created = new Date(created);
+
+      return this;
+    } catch (err) {
+      return err;
+    }
+  }
 }

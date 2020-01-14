@@ -100,14 +100,42 @@ describe('User class', () => {
       }
     });
 
-    // it('should fail to create a user without auth', async () => {
-    //   await auth.logout();
-    //   try {
-    //     await jane.create();
-    //   } catch (err) {
-    //     expect(err).not.toBeNull();
-    //   }
-    // });
+    it('should fail to create a user without auth', async () => {
+      try {
+        await auth.logout();
+        await jane.create();
+      } catch (err) {
+        expect(err).not.toBeNull();
+      }
+    });
+  });
+
+  describe('Getting a user', () => {
+    it('should create a user', async () => {
+      for (let user of users) {
+        const [u0, u1] = user;
+        const res = {data: {user: u1}};
+        const mockedAxios = axios as jest.Mocked<typeof axios>;
+        mockedAxios.get.mockResolvedValue(res);
+        let u = await u0.get();
+        expect(u.uid).toEqual(u1.uid);
+        expect(u.emailAddress).toEqual(u1.emailAddress);
+        expect(u.firstName).toEqual(u1.firstName);
+        expect(u.lastName).toEqual(u1.lastName);
+        expect(u.phoneNumber).toEqual(u1.phoneNumber);
+        expect(u.created).toEqual(u1.created);
+        expect(u.referral).toEqual(u1.referral);
+      }
+    });
+
+    it('should fail to get a user without auth', async () => {
+      try {
+        await auth.logout();
+        await jane.get();
+      } catch (err) {
+        expect(err).not.toBeNull();
+      }
+    });
   });
 
   // describe('Getting a product', () => {
