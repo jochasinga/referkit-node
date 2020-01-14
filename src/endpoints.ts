@@ -6,5 +6,6 @@ const loginUrl = hostname + baseUrl + '/login';
 const logoutUrl = hostname + baseUrl + '/logout';
 const productUrl = hostname + baseUrl + '/products';
 const meUrl = hostname + baseUrl + '/me';
+const userUrl = hostname + baseUrl + '/users';
 
-export {loginUrl, logoutUrl, productUrl, meUrl};
+export {loginUrl, logoutUrl, productUrl, meUrl, userUrl};

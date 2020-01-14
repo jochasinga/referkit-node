@@ -23,8 +23,7 @@ export class Product implements ProductInterface {
   alias: string = '';
   domain: string = '';
   created: Date = new Date();
-
-  private auth: Auth|undefined;
+  auth: Auth|undefined;
 
   constructor(domain: string, config: AuthConfig) {
     const {auth} = config;
