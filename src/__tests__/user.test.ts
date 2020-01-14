@@ -129,86 +129,63 @@ describe('User class', () => {
     });
 
     it('should fail to get a user without auth', async () => {
-      try {
-        await auth.logout();
-        await jane.get();
-      } catch (err) {
-        expect(err).not.toBeNull();
+      for (let user of users) {
+        const [u0, _] = user;
+        try {
+          await auth.logout();
+          await u0.update({emailAddress: 'foo@gmail.com'});
+        } catch (err) {
+          expect(err).not.toBeNull();
+        }
       }
     });
   });
 
-  // describe('Getting a product', () => {
-  //   beforeEach(() => {
-  //     const res = {data: {product: prod}};
-  //     const mockedAxios = axios as jest.Mocked<typeof axios>;
-  //     mockedAxios.get.mockResolvedValue(res);
-  //   });
+  describe('Updating a user', () => {
+    it('should update a user', async () => {
+      for (let user of users) {
+        const [u0, u1] = user;
+        u1.firstName += 'foo';
+        u1.lastName += 'bar';
 
-  //   it('should get a product', async () => {
-  //     let p = await prod.get(alias);
-  //     expect(p).toEqual(prod);
-  //   });
+        let res = {data: {user: u1}};
+        let mockedAxios = axios as jest.Mocked<typeof axios>;
+        mockedAxios.post.mockResolvedValue(res);
 
-  //   it('should throw an error if auth is invalid', async () => {
-  //     await auth.logout();
-  //     try {
-  //       await prod.get(alias);
-  //     } catch (err) {
-  //       expect(err).not.toBeNull();
-  //     }
-  //   });
-  // });
+        let u = await u0.update({
+          firstName: u0.firstName + 'foo',
+          lastName: u0.lastName + 'bar'
+        });
 
-  // describe('Updating a product', () => {
-  //   beforeEach(() => {
-  //     const res = {data: {product: prod}};
-  //     const mockedAxios = axios as jest.Mocked<typeof axios>;
-  //     mockedAxios.post.mockResolvedValue(res);
-  //   });
+        expect(u.uid).toEqual(u1.uid);
+        expect(u.emailAddress).toEqual(u1.emailAddress);
+        expect(u.firstName).toEqual(u1.firstName);
+        expect(u.lastName).toEqual(u1.lastName);
+        expect(u.phoneNumber).toEqual(u1.phoneNumber);
+        expect(u.created).toEqual(u1.created);
+        expect(u.referral).toEqual(u1.referral);
 
-  //   it('should update a product', async () => {
-  //     const res = {data: {product: prod}};
-  //     const mockedAxios = axios as jest.Mocked<typeof axios>;
-  //     mockedAxios.post.mockResolvedValue(res);
-  //     const newAlias = 'babadook-9999';
-  //     let p = await prod.update({alias: newAlias});
-  //     expect(p).toEqual(Object.assign(prod, {alias: newAlias}));
-  //   });
+        u1.emailAddress = 'foo@mail.com'
 
-  //   it('should throw an error if auth is invalid', async () => {
-  //     const res = {data: {product: prod}};
-  //     const mockedAxios = axios as jest.Mocked<typeof axios>;
-  //     mockedAxios.post.mockResolvedValue(res);
-  //     const newAlias = 'babadook-9999';
-  //     await auth.logout();
-  //     try {
-  //       await prod.update({alias: newAlias});
-  //     } catch (err) {
-  //       expect(err).not.toBeNull();
-  //     }
-  //   });
-  // });
+        res = {data: {user: u1}};
+        mockedAxios.post.mockResolvedValue(res);
 
-  // describe('Deleting a product', () => {
-  //   beforeEach(() => {
-  //     const res = {data: {success: true}};
-  //     const mockedAxios = axios as jest.Mocked<typeof axios>;
-  //     mockedAxios.delete.mockResolvedValue(res);
-  //   });
+        u = await u0.update({emailAddress: 'foo@mail.com'});
+        expect(u.emailAddress).toEqual(u1.emailAddress);
+      }
+    });
 
-  //   it('should delete a product', async () => {
-  //     const ok = await prod.delete();
-  //     expect(ok).toBeTruthy();
-  //   });
+    it('should fail to update a user without auth', async () => {
+      for (let user of users) {
+        const [u0, _] = user;
+        try {
+          await auth.logout();
+          await u0.update({emailAddress: 'foo@gmail.com'});
+        } catch (err) {
+          expect(err).not.toBeNull();
+        }
+      }
+    });
+  });
 
-  //   it('should throw an error if auth is invalid', async () => {
-  //     await auth.logout();
-  //     try {
-  //       await prod.delete();
-  //     } catch (err) {
-  //       expect(err).not.toBeNull();
-  //     }
-  //   });
-  // });
 });

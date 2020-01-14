@@ -2,6 +2,14 @@ import axios from 'axios';
 import {Product} from './product';
 import {userUrl} from './endpoints';
 
+type UpdateProps = {
+  firstName?: string;
+  lastName?: string;
+  emailAddress?: string;
+  phoneNumber?: string;
+  referral?: Referral;
+}
+
 interface UserConfig {
   firstName?: string;
   lastName?: string;
@@ -71,21 +79,22 @@ export class User implements UserInterface {
         }
       });
       const {user} = res.data;
-      const {
-        uid, firstName, lastName,
-        emailAddress, phoneNumber,
-        created, referral,
-      } = user;
+      return user;
+      // const {
+      //   uid, firstName, lastName,
+      //   emailAddress, phoneNumber,
+      //   created, referral,
+      // } = user;
 
-      this.uid = uid;
-      this.emailAddress = emailAddress;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.phoneNumber = phoneNumber;
-      this.referral = referral;
-      this.created = new Date(created);
+      // this.uid = uid;
+      // this.emailAddress = emailAddress;
+      // this.firstName = firstName;
+      // this.lastName = lastName;
+      // this.phoneNumber = phoneNumber;
+      // this.referral = referral;
+      // this.created = new Date(created);
 
-      return this;
+      // return this;
     } catch (err) {
       return err;
     }
@@ -108,21 +117,42 @@ export class User implements UserInterface {
         }
       });
       const {user} = res.data;
-      const {
-        uid, firstName, lastName,
-        emailAddress, phoneNumber,
-        created, referral,
-      } = user;
+      return user;
+      // const {
+      //   uid, firstName, lastName,
+      //   emailAddress, phoneNumber,
+      //   created, referral,
+      // } = user;
 
-      this.uid = uid;
-      this.emailAddress = emailAddress;
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.phoneNumber = phoneNumber;
-      this.referral = referral;
-      this.created = new Date(created);
+      // this.uid = uid;
+      // this.emailAddress = emailAddress;
+      // this.firstName = firstName;
+      // this.lastName = lastName;
+      // this.phoneNumber = phoneNumber;
+      // this.referral = referral;
+      // this.created = new Date(created);
+      // return this;
+    } catch (err) {
+      return err;
+    }
+  }
 
-      return this;
+  async update(props: UpdateProps): Promise<User> {
+    const {auth} = this.product;
+    if (!(auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
+    try {
+      const url: string = userUrl + '/' + this.emailAddress;
+      const res = await axios.post(url, Object.assign(props, {
+        headers: {
+          'Authorization': `Bearer ${auth?.token}`,
+        }
+      }));
+      const {user} = res.data;
+      return user;
     } catch (err) {
       return err;
     }
