@@ -157,4 +157,27 @@ export class User implements UserInterface {
       return err;
     }
   }
+
+  async delete(email: string = ''): Promise<User> {
+    const {auth} = this.product;
+    if (!(auth?.isLoggedIn)) {
+      const err = new Error('Auth is invalid');
+      return new Promise((_, reject) => reject(err));
+    }
+
+    email = email === '' ? this.emailAddress : email;
+
+    try {
+      const url: string = userUrl + '/' + email;
+      const res = await axios.delete(url, {
+        headers: {
+          'Authorization': `Bearer ${auth?.token}`,
+        }
+      });
+      const {user} = res.data;
+      return user;
+    } catch (err) {
+      return err;
+    }
+  }
 }

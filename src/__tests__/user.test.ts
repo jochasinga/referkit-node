@@ -188,4 +188,38 @@ describe('User class', () => {
     });
   });
 
+  describe('Deleting a user', () => {
+    it('should delete a user', async () => {
+      for (let user of users) {
+        const [u0, u1] = user;
+
+        let res = {data: {user: u1}};
+        let mockedAxios = axios as jest.Mocked<typeof axios>;
+        mockedAxios.delete.mockResolvedValue(res);
+
+        let u = await u0.delete();
+
+        expect(u.uid).toEqual(u1.uid);
+        expect(u.emailAddress).toEqual(u1.emailAddress);
+        expect(u.firstName).toEqual(u1.firstName);
+        expect(u.lastName).toEqual(u1.lastName);
+        expect(u.phoneNumber).toEqual(u1.phoneNumber);
+        expect(u.created).toEqual(u1.created);
+        expect(u.referral).toEqual(u1.referral);
+      }
+    });
+
+    it('should fail to delete a user without auth', async () => {
+      for (let user of users) {
+        const [u0, _] = user;
+        try {
+          await auth.logout();
+          await u0.delete();
+        } catch (err) {
+          expect(err).not.toBeNull();
+        }
+      }
+    });
+  });
+
 });
