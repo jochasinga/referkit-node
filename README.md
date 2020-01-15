@@ -12,7 +12,7 @@ npm install alphaseek
 
 ## Getting started
 
-In your project, authenticate (login) in the appropriate module to retain the access token, which will be useful later.
+In your project, authenticate (login) in the appropriate place to get an `Auth` instance, which will be used to authenticate a `Product`.
 
 ```javascript
 
@@ -35,9 +35,9 @@ async function init() {
   // Get user's unique referral link and code
   const {url, moniker, score, referrer} = user.referral;
 
-  console.log(url); // https://alphaseek.me/i/99PpQrh7
-  console.log(moniker); // 99PpQrh7
-  console.log(score); // 1
+  console.log(url);         // https://alphaseek.me/i/99PpQrh7
+  console.log(moniker);     // 99PpQrh7
+  console.log(score);       // 1
   console.log(referrer.referral.moniker); // 916hqpB7
 }
 
@@ -45,8 +45,9 @@ async function init() {
 
 ## Authentication
 
-To log into your account, use `Auth` class. It is a single source of truth for your account identity
-as Alphaseek customer.
+To log into your account, use an `Auth` as a static class or instantiate a singleton object. It is a single source of truth for your account identity as Alphaseek customer.
+
+### Static
 
 ```js
 
@@ -69,6 +70,8 @@ const ok = await Auth.logout();
 ```
 
 This also clears old token from the localStorage if `Auth.useLocalStorage` is set to `true`.
+
+### Singleton
 
 You can also create an `Auth` singleton instance so you could pass it around in other calls.
 
