@@ -2,6 +2,7 @@ import axios from 'axios';
 import {Auth} from '../auth';
 import {Product} from '../product';
 import {User, Referral} from '../user';
+import {userUrl} from '../endpoints';
 
 jest.mock('axios');
 
@@ -62,6 +63,7 @@ describe('User class', () => {
     auth = new Auth();
     await auth.login('fake@gmail.com', 'foobar');
     prod = Object.assign(new Product(domain, {auth}), product);
+
     jane = new User(janeEmail, {product: prod});
     john = new User(johnEmail, {
       product: prod,
@@ -80,6 +82,25 @@ describe('User class', () => {
       [john, johnX],
       [joe, joeX],
     ];
+  });
+
+  describe('Getting list of users', () => {
+    it('should get a list of users', async () => {
+      const users = [jane, john];
+      const pagesize = users.length;
+      const res = {
+        data: {users},
+      };
+      const mockedAxios = axios as jest.Mocked<typeof axios>;
+      mockedAxios.get.mockResolvedValue(res);
+      const usersList = await User.getAll(pagesize);
+      expect(usersList.length).toEqual(pagesize);
+      expect(mockedAxios.get)
+        .toHaveBeenCalledWith(userUrl + `?pagesize=${pagesize}`);
+
+      await User.getAll();
+      expect(mockedAxios.get).toHaveBeenCalledWith(userUrl);
+    });
   });
 
   describe('Creating a user', () => {

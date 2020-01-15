@@ -49,6 +49,13 @@ export class User implements UserInterface {
 
   private product: Product;
 
+  static async getAll(pagesize: number = 20): Promise<Array<User>> {
+    const url = userUrl + (pagesize === 20 ? '' : `?pagesize=${pagesize}`);
+    const res = await axios.get(url);
+    const {users} = res.data;
+    return users;
+  }
+
   constructor(emailAddress: string, config: UserConfig) {
     const {product} = config;
     if (product === undefined) {
