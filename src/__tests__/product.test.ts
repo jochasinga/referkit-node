@@ -11,9 +11,14 @@ describe('Product class', () => {
   const uid = 'efl1230FB2ldedge0';
   const created = new Date('1995-12-17T03:24:00');
   const product = {uid, alias, created, domain};
+  const key = 'alphaseekToken';
 
   let prod: Product;
   let auth: Auth;
+
+  beforeAll(() => {
+    Storage.prototype.getItem = jest.fn((key: string) => token);
+  });
 
   beforeEach(async () => {
     const res = {data: {token}};
@@ -36,6 +41,7 @@ describe('Product class', () => {
     it('should create a product', async () => {
       let p = await prod.create();
       expect(p).toEqual(prod);
+      expect(window.localStorage.getItem).toHaveBeenCalledWith(key);
     });
 
     it('should fail to create a product without auth', async () => {

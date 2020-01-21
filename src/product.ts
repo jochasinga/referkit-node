@@ -18,6 +18,8 @@ interface ProductInterface {
   created: Date;
 }
 
+const key = 'alphaseekToken';
+
 export class Product implements ProductInterface {
   uid: string = '';
   alias: string = '';
@@ -32,15 +34,24 @@ export class Product implements ProductInterface {
   }
 
   async create(): Promise<Product> {
-    if (!(this.auth?.isLoggedIn)) {
+    let tok: string = '';
+    if (window && window.localStorage) {
+      tok = window.localStorage.getItem(key) || '';
+    }
+
+    if (tok === '' && !(this.auth?.isLoggedIn)) {
       const err = new Error('Auth is invalid');
       return new Promise((_, reject) => reject(err));
+    }
+
+    if (this.auth?.token) {
+      tok = this.auth?.token;
     }
 
     try {
       const res = await axios.post(productUrl, {
         headers: {
-          'Authorization': `Bearer ${this.auth?.token}`,
+          'Authorization': `Bearer ${tok}`,
         }
       });
       const {product} = res.data;
