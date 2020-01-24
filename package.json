@@ -1,7 +1,7 @@
 {
   "name": "alphaseek",
   "version": "1.0.0",
-  "description": "JavaScript/TypeScript library for Alphaseek SDK",
+  "description": "JavaScript/TypeScript library for building referral program with Alphaseek SDK",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -23,8 +23,10 @@
     "url": "git+https://github.com/jochasinga/alphaseek.js.git"
   },
   "keywords": [
-    "Alphaseek",
-    "referral"
+    "alphaseek",
+    "referral",
+    "referral marketing",
+    "referral program"
   ],
   "author": "Joe Chasinga <joe@alphaseek.io>",
   "license": "ISC",

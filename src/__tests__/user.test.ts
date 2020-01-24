@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {Auth} from '../auth';
-import {Product} from '../product';
-import {User, Referral} from '../user';
-import {userUrl} from '../endpoints';
+import { Auth } from '../auth';
+import { Product } from '../product';
+import { User, Referral } from '../user';
+import { userUrl } from '../endpoints';
 
 jest.mock('axios');
 
@@ -12,7 +12,7 @@ describe('User class', () => {
   const token = 'aeGe109Felxbg10Fzge1039';
   const uid = 'efl1230FB2ldedge0';
   const created = new Date('1995-12-17T03:24:00');
-  const product = {uid, alias, created, domain};
+  const product = { uid, alias, created, domain };
 
   let prod: Product;
   let auth: Auth;
@@ -42,7 +42,7 @@ describe('User class', () => {
     created: new Date(),
   };
 
-  const joeX:User = <User>{
+  const joeX: User = <User>{
     uid: '234Edbgeadg013432rafewgFE',
     emailAddress: joeEmail,
     firstName: 'Joe',
@@ -51,20 +51,20 @@ describe('User class', () => {
     created: new Date(),
     referral: <Referral>{
       moniker: '8Ae30Fg',
-    }
+    },
   };
 
   let users: Array<[User, User]>;
 
   beforeEach(async () => {
-    const res = {data: {token}};
+    const res = { data: { token } };
     const mockedAxios = axios as jest.Mocked<typeof axios>;
     mockedAxios.post.mockResolvedValue(res);
     auth = new Auth();
     await auth.login('fake@gmail.com', 'foobar');
-    prod = Object.assign(new Product(domain, {auth}), product);
+    prod = Object.assign(new Product(domain, { auth }), product);
 
-    jane = new User(janeEmail, {product: prod});
+    jane = new User(janeEmail, { product: prod });
     john = new User(johnEmail, {
       product: prod,
       firstName: 'John',
@@ -89,14 +89,13 @@ describe('User class', () => {
       const users = [jane, john];
       const pagesize = users.length;
       const res = {
-        data: {users},
+        data: { users },
       };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.get.mockResolvedValue(res);
       const usersList = await User.getAll(pagesize);
       expect(usersList.length).toEqual(pagesize);
-      expect(mockedAxios.get)
-        .toHaveBeenCalledWith(userUrl + `?pagesize=${pagesize}`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(userUrl + `?pagesize=${pagesize}`);
 
       await User.getAll();
       expect(mockedAxios.get).toHaveBeenCalledWith(userUrl);
@@ -107,7 +106,7 @@ describe('User class', () => {
     it('should create a user', async () => {
       for (let user of users) {
         const [u0, u1] = user;
-        const res = {data: {user: u1}};
+        const res = { data: { user: u1 } };
         const mockedAxios = axios as jest.Mocked<typeof axios>;
         mockedAxios.post.mockResolvedValue(res);
         let u = await u0.create();
@@ -135,7 +134,7 @@ describe('User class', () => {
     it('should create a user', async () => {
       for (let user of users) {
         const [u0, u1] = user;
-        const res = {data: {user: u1}};
+        const res = { data: { user: u1 } };
         const mockedAxios = axios as jest.Mocked<typeof axios>;
         mockedAxios.get.mockResolvedValue(res);
         let u = await u0.get();
@@ -154,7 +153,7 @@ describe('User class', () => {
         const [u0, _] = user;
         try {
           await auth.logout();
-          await u0.update({emailAddress: 'foo@gmail.com'});
+          await u0.update({ emailAddress: 'foo@gmail.com' });
         } catch (err) {
           expect(err).not.toBeNull();
         }
@@ -169,13 +168,13 @@ describe('User class', () => {
         u1.firstName += 'foo';
         u1.lastName += 'bar';
 
-        let res = {data: {user: u1}};
+        let res = { data: { user: u1 } };
         let mockedAxios = axios as jest.Mocked<typeof axios>;
         mockedAxios.post.mockResolvedValue(res);
 
         let u = await u0.update({
           firstName: u0.firstName + 'foo',
-          lastName: u0.lastName + 'bar'
+          lastName: u0.lastName + 'bar',
         });
 
         expect(u.uid).toEqual(u1.uid);
@@ -186,12 +185,12 @@ describe('User class', () => {
         expect(u.created).toEqual(u1.created);
         expect(u.referral).toEqual(u1.referral);
 
-        u1.emailAddress = 'foo@mail.com'
+        u1.emailAddress = 'foo@mail.com';
 
-        res = {data: {user: u1}};
+        res = { data: { user: u1 } };
         mockedAxios.post.mockResolvedValue(res);
 
-        u = await u0.update({emailAddress: 'foo@mail.com'});
+        u = await u0.update({ emailAddress: 'foo@mail.com' });
         expect(u.emailAddress).toEqual(u1.emailAddress);
       }
     });
@@ -201,7 +200,7 @@ describe('User class', () => {
         const [u0, _] = user;
         try {
           await auth.logout();
-          await u0.update({emailAddress: 'foo@gmail.com'});
+          await u0.update({ emailAddress: 'foo@gmail.com' });
         } catch (err) {
           expect(err).not.toBeNull();
         }
@@ -214,7 +213,7 @@ describe('User class', () => {
       for (let user of users) {
         const [u0, u1] = user;
 
-        let res = {data: {user: u1}};
+        let res = { data: { user: u1 } };
         let mockedAxios = axios as jest.Mocked<typeof axios>;
         mockedAxios.delete.mockResolvedValue(res);
 
@@ -242,5 +241,4 @@ describe('User class', () => {
       }
     });
   });
-
 });

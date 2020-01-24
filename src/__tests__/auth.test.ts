@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {Auth} from '../auth';
-import {Customer} from '../customer';
+import { Auth } from '../auth';
+import Customer from '../customer';
 
 jest.mock('axios');
 
@@ -13,10 +13,7 @@ describe('Auth class', () => {
     lastName: 'Chasinga',
     emailAddress: 'joe@alphaseek.io',
     phoneNumber: '+19892010421',
-    products: [
-      'alphaseek-io-7321',
-      'referkit-io-9999',
-    ],
+    products: ['alphaseek-io-7321', 'referkit-io-9999'],
     created: new Date(),
   };
 
@@ -28,7 +25,7 @@ describe('Auth class', () => {
     });
 
     it('should return an access token on login', async () => {
-      const res = {data: {token}};
+      const res = { data: { token } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.post.mockResolvedValue(res);
       const tok = await Auth.login('fake@gmail.com', 'foobar');
@@ -40,7 +37,7 @@ describe('Auth class', () => {
     });
 
     it('mocks and calls window.localStorage.setItem', async () => {
-      const res = {data: {token}};
+      const res = { data: { token } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.post.mockResolvedValue(res);
       await Auth.login('fake@gmail.com', 'foobar');
@@ -48,7 +45,7 @@ describe('Auth class', () => {
     });
 
     it('Should return true', async () => {
-      const res = {data: {success: true}};
+      const res = { data: { success: true } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.post.mockResolvedValue(res);
       const ok = await Auth.logout();
@@ -56,8 +53,8 @@ describe('Auth class', () => {
       expect(window.localStorage.removeItem).toHaveBeenCalledWith(key);
     });
 
-    it('should return customer\'s info', async () => {
-      const res = {data: {me: customer}};
+    it("should return customer's info", async () => {
+      const res = { data: { me: customer } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.get.mockResolvedValue(res);
       const cust = await Auth.me();
@@ -81,7 +78,7 @@ describe('Auth class', () => {
     });
 
     it('should log in correctly', async () => {
-      const res = {data: {token}};
+      const res = { data: { token } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.post.mockResolvedValue(res);
       const tok = await auth.login('fake@gmail.com', 'password');
@@ -105,7 +102,7 @@ describe('Auth class', () => {
       expect(Auth.current).not.toBe(auth2);
       expect(auth2.isLoggedIn).toBeFalsy();
 
-      const res = {data: {token}};
+      const res = { data: { token } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.post.mockResolvedValue(res);
 
@@ -123,8 +120,8 @@ describe('Auth class', () => {
       expect(auth3.isLoggedIn).toBeTruthy();
     });
 
-    it('should return customer\'s info', async () => {
-      const res = {data: {me: customer}};
+    it("should return customer's info", async () => {
+      const res = { data: { me: customer } };
       const mockedAxios = axios as jest.Mocked<typeof axios>;
       mockedAxios.get.mockResolvedValue(res);
       const cust = await auth.me();
@@ -132,4 +129,3 @@ describe('Auth class', () => {
     });
   });
 });
-

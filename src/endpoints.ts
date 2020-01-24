@@ -8,4 +8,4 @@ const productUrl = hostname + baseUrl + '/products';
 const meUrl = hostname + baseUrl + '/me';
 const userUrl = hostname + baseUrl + '/users';
 
-export {loginUrl, logoutUrl, productUrl, meUrl, userUrl};
+export { loginUrl, logoutUrl, productUrl, meUrl, userUrl };

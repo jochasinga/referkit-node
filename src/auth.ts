@@ -1,24 +1,22 @@
 import axios from 'axios';
-import {loginUrl, logoutUrl, meUrl} from './endpoints';
-import {Customer} from './customer';
+import Customer from './customer';
+import { loginUrl, logoutUrl, meUrl } from './endpoints';
 
 export class Auth {
   static get token() {
-    return (window && window.localStorage)
-      ? window.localStorage.getItem(Auth.key)
-      : Auth._token;
+    return window && window.localStorage ? window.localStorage.getItem(Auth.key) : Auth._token;
   }
 
   public static hasCurrent(): boolean {
     return Boolean(Auth._current);
   }
 
-  static get current(): Auth|null {
+  static get current(): Auth | null {
     return Auth._current;
   }
 
   public static clearLocalStorage() {
-    if (window != undefined && window.localStorage != undefined) {
+    if (window !== undefined && window.localStorage !== undefined) {
       window.localStorage.removeItem(Auth.key);
     }
   }
@@ -32,8 +30,8 @@ export class Auth {
 
   public static async login(emailAddress: string, password: string): Promise<string> {
     try {
-      const res = await axios.post(loginUrl, {emailAddress, password})
-      const {token} = res.data;
+      const res = await axios.post(loginUrl, { emailAddress, password });
+      const { token } = res.data;
       Auth.setToken(token);
       return token;
     } catch (err) {
@@ -45,10 +43,10 @@ export class Auth {
     try {
       const res = await axios.post(logoutUrl, {
         headers: {
-          'Authorization': `Bearer ${Auth.token}`,
-        }
+          Authorization: `Bearer ${Auth.token}`,
+        },
       });
-      const {success} = res.data;
+      const { success } = res.data;
       Auth.clearToken();
       return success;
     } catch (err) {
@@ -60,22 +58,19 @@ export class Auth {
     try {
       const res = await axios.get(meUrl, {
         headers: {
-          'Authorization': `Bearer ${Auth.token}`,
-        }
+          Authorization: `Bearer ${Auth.token}`,
+        },
       });
-      const {me} = res.data;
+      const { me } = res.data;
       return me as Customer;
     } catch (err) {
       return err;
     }
   }
 
-  // constructor() {
-  //   if (Auth.hasCurrent()) {
-  //     Auth._current.logout();
-  //   }
-  //   Auth._current = this;
-  // }
+  private static key = 'alphaseekToken';
+  private static _token: string;
+  private static _current: Auth | null = null;
 
   private static replaceCurrent(current: Auth) {
     if (Auth.hasCurrent()) {
@@ -84,61 +79,6 @@ export class Auth {
     Auth._current = current;
   }
 
-  public get isLoggedIn(): boolean {
-    return this._token !== '';
-  }
-
-  public get token(): string {
-    return this._token;
-  }
-
-  public async login(emailAddress: string, password: string): Promise<string> {
-    Auth.replaceCurrent(this);
-    // if (Auth._current !== this) {
-    //   console.warn("This Auth instance isn't active");
-    //   await this.logout();
-    // }
-
-    try {
-      const res = await axios.post(loginUrl, {emailAddress, password})
-      const {token} = res.data;
-      this._token = token;
-      return token;
-    } catch (err) {
-      return err;
-    }
-  }
-
-  public async logout(): Promise<boolean> {
-    try {
-      const res = await axios.post(logoutUrl, {
-        headers: {
-          'Authorization': `Bearer ${this._token}`,
-        }
-      });
-      const {success} = res.data;
-      this._token = '';
-      return success;
-    } catch (err) {
-      return err;
-    }
-  }
-
-  public async me(): Promise<Customer> {
-    try {
-      const res = await axios.get(meUrl, {
-        headers: {
-          'Authorization': `Bearer ${this.token}`,
-        }
-      });
-      const {me} = res.data;
-      return me as Customer;
-    } catch (err) {
-      return err;
-    }
-  }
-
-  private static key = 'alphaseekToken';
   private static clearToken() {
     if (window && window.localStorage) {
       window.localStorage.removeItem(Auth.key);
@@ -152,7 +92,55 @@ export class Auth {
     Auth._token = tok;
   }
 
-  private static _token: string;
-  private static _current: Auth|null = null;
   private _token: string = '';
+
+  public get isLoggedIn(): boolean {
+    return this._token !== '';
+  }
+
+  public get token(): string {
+    return this._token;
+  }
+
+  public async login(emailAddress: string, password: string): Promise<string> {
+    Auth.replaceCurrent(this);
+
+    try {
+      const res = await axios.post(loginUrl, { emailAddress, password });
+      const { token } = res.data;
+      this._token = token;
+      return token;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async logout(): Promise<boolean> {
+    try {
+      const res = await axios.post(logoutUrl, {
+        headers: {
+          Authorization: `Bearer ${this._token}`,
+        },
+      });
+      const { success } = res.data;
+      this._token = '';
+      return success;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public async me(): Promise<Customer> {
+    try {
+      const res = await axios.get(meUrl, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      });
+      const { me } = res.data;
+      return me as Customer;
+    } catch (err) {
+      return err;
+    }
+  }
 }
