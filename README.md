@@ -1,10 +1,12 @@
-# refer.js
+# alphaseek.js
 
-JavaScript/TypeScript library for building a referral campaign with [Alphaseek SDK](http://alphaseek.io).
+JavaScript/TypeScript library for building referral programs with [Alphaseek SDK](http://alphaseek.io).
 
 ## Sign up
 
-In order to use the library, please make sure you have signed up with Alphaseek.
+In order to use the library, please make sure you have [signed up with Alphaseek][signup].
+
+[signup]: https://alphaseek.typeform.com/to/kBUVWb
 
 ## Install
 
