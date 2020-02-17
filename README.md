@@ -1,5 +1,8 @@
 # referkit
 
+![npm](https://img.shields.io/npm/v/referkit)
+![Twitter URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Ftwitter.com%2Freferkit)
+
 TypeScript/JavaScript adapter for integrating referral programs with [Referkit API](https://referkit.io).
 
 ## Sign up
@@ -160,7 +163,7 @@ if (urlParams.get('source') === 'alphaseek') {
 
 - 2-sided reward when a user signed up
 - Successful purchase with "coupon" code
-- Priority queue based on referrals
+- Invitation queue based on referrals
 
 ### Referral and Destination URLs
 
