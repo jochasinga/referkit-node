@@ -1,10 +1,10 @@
-# alphaseek.js
+# referkit
 
-JavaScript/TypeScript library for building referral programs with [Alphaseek SDK](http://alphaseek.io).
+TypeScript/JavaScript adapter for integrating referral programs with [Referkit API](https://referkit.io).
 
 ## Sign up
 
-In order to use the library, please make sure you have [signed up with Alphaseek][signup].
+Please make sure you have [signed up with Referkit][signup] and have your email and password ready.
 
 [signup]: https://alphaseek.typeform.com/to/kBUVWb
 
@@ -12,7 +12,7 @@ In order to use the library, please make sure you have [signed up with Alphaseek
 
 ```shell
 
-npm install alphaseek
+npm i referkit
 
 ```
 
@@ -22,7 +22,7 @@ In your project, authenticate (login) in the appropriate place to get an `Auth` 
 
 ```javascript
 
-import {Auth} from 'alphaseek';
+import {Auth} from 'referkit';
 
 async function init() {
   const auth = new Auth();
@@ -57,9 +57,9 @@ To log into your account, use an `Auth` as a static class or instantiate a singl
 
 ```js
 
-import {Auth} from 'alphaseek';
+import {Auth} from 'referkit';
 
-const token = await Auth.login('joe@awesome.app', 'secretPassword');
+const token = await Auth.login('joe@awesome.app', 'secretP&ssw0rd!');
 
 ```
 

@@ -1,7 +1,7 @@
 {
-  "name": "alphaseek",
+  "name": "referkit",
   "version": "0.1.0-beta.2",
-  "description": "JavaScript/TypeScript library for building referral program with Alphaseek SDK",
+  "description": "TypeScript/JavaScript adapter for Referkit API",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -20,20 +20,21 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jochasinga/alphaseek.js.git"
+    "url": "git+https://github.com/jochasinga/referkit-node.git"
   },
   "keywords": [
-    "alphaseek",
+    "referkit",
     "referral",
     "referral marketing",
-    "referral program"
+    "referral program",
+    "referral campaign"
   ],
-  "author": "Joe Chasinga <joe@alphaseek.io>",
+  "author": "Joe Chasinga <joe@referkit.io>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jochasinga/alphaseek.js/issues"
+    "url": "https://github.com/jochasinga/referkit-node/issues"
   },
-  "homepage": "https://github.com/jochasinga/alphaseek.js#readme",
+  "homepage": "https://github.com/jochasinga/referkit-node#readme",
   "devDependencies": {
     "@types/jest": "^24.0.25",
     "jest": "^24.9.0",
